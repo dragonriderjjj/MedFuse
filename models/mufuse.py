@@ -157,15 +157,6 @@ class MUFUSE(nn.Module):
             
             x_emb = gated_subspaces.view(B, T, F, self.d_model)  # (B, T, F, d_model)
 
-        # old version of SCANE
-        # embedding_idx = x_idx * x_mask if self.independent_padding else x_idx
-        # embedding_value = x * x_mask if self.independent_padding else x  # (B, T, F)
-        # x_feature_emb = self.value_embedding(embedding_idx)  # (B, T, F, d_model)
-
-        # # 共用 projector + scaling
-        # x_value_emb = self.value_projector(embedding_value.unsqueeze(-1))  # (B, T, F)
-
-        # x_emb = x_value_emb * x_feature_emb  # (B, T, F, d_model)
         return x_emb
         
 if __name__ == '__main__':
