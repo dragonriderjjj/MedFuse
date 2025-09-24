@@ -1,0 +1,126 @@
+{
+    "exp_info": {
+        "main_folder": "exp_output",
+        "exp_name": "overall_result",
+        "annotation": "best"
+    },
+    "dataset": {
+        "module": "datasets.mimic3_mortality_st_dataset",
+        "type": "GetEHRDataset",
+        "data_path": "./data/MI3_st",
+        "BasicStatisticInfo": {
+            "drop_outlier": true,
+            "outlier_fence": 3.0,
+            "statistic_plot": false,
+            "plot_output_dir": "TODO"
+        },
+        "train": {
+            "GetDataset": {
+                "mode": "train",
+                "padding": "None",
+                "do_augmentation": false,
+                "do_normalization": true
+            }
+        },
+        "test": {
+            "GetDataset": {
+                "mode": "test",
+                "padding": "None",
+                "do_augmentation": false,
+                "do_normalization": true
+            }
+        }
+    },
+    "dataloader": {
+        "train": {
+            "batch_size": 64,
+            "shuffle": true,
+            "num_workers": 4
+        },
+        "valid": {
+            "batch_size": 64,
+            "shuffle": false,
+            "num_workers": 4
+        },
+        "test": {
+            "batch_size": 256,
+            "shuffle": false,
+            "num_workers": 4
+        }
+    },
+    "model": {
+        "module": "models.medfuse_MI3",
+        "type": "medfuse",
+        "kwargs": {
+            "d_model": 128,
+            "num_heads": 2,
+            "ff_dim": 208,
+            "ff_dropout": 0.206,
+            "attn_dropout": 0.01,
+            "norm_type": "LayerNorm",
+            "only_mask_first": false,
+            "seq_len": 24,
+            "NUM_LEN": 128,
+            "CAT_LEN": 4,
+            "num_layers": 1,
+            "decoder_down_factor": 2,
+            "decoder_dropout": 0.4,
+            "output_size": 1,
+            "embedding_module_kwargs": {
+                "independent_padding": true,
+                "max_norm": null,
+                "value_proj_dim": 32,
+                "k_gates": 128,
+                "use_pretrained": false,
+                "pretrained_weight_path": "TODO"
+            }
+        }
+    },
+    "loss": {
+        "module": "loss.focal_loss",
+        "type": "FocalLoss",
+        "kwargs": {
+            "alpha": 0.5,
+            "gamma": 2.0,
+            "reduction": "mean",
+            "eps": 0
+        }
+    },
+    "optimizer": {
+        "module": "torch.optim",
+        "type": "Adam",
+        "kwargs": {
+            "lr": 4e-5
+        }
+    },
+    "lr_scheduler": {
+        "module": "torch.optim.lr_scheduler",
+        "type": "StepLR",
+        "kwargs": {
+            "step_size": 100,
+            "gamma": 0.5
+        }
+    },
+    "trainer": {
+        "module": "trainer.base_trainer_MIMIC3_mortality_renew",
+        "type": "BaseTrainer",
+        "kwargs": {
+            "do_early_stop": true,
+            "early_stopping_patience": 25,
+            "checkpoint_period": 5,
+            "plot_process": true,
+            "resume": false,
+            "resume_checkpoint_path": "TODO"
+        },
+        "train_kwargs": {
+            "epoch": 250
+        }
+    },
+    "tester": {
+        "module": "tester.base_tester_MIMIC3_mortality_renew",
+        "type": "BaseTester",
+        "kwargs": {
+            "plot_probability_distribution": true
+        }
+    }
+}

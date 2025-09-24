@@ -1,0 +1,130 @@
+{
+    "exp_info": {
+        "main_folder": "exp_output",
+        "exp_name": "TODO",
+        "annotation": "TODO"
+    },
+    "dataset": {
+        "module": "datasets.physio_2012_dataset",
+        "type": "GetDataset",
+        "data_path": "./data/P12_1hr",
+        "BasicStatisticInfo": {
+            "drop_outlier": true,
+            "outlier_fence": 3.0,
+            "statistic_plot": false,
+            "plot_output_dir": "TODO"
+        },
+        "train": {
+            "GetDataset": {
+                "mode": "train",
+                "do_normalization": true
+            }
+        },
+        "test": {
+            "GetDataset": {
+                "mode": "test",
+                "do_normalization": true
+            }
+        }
+    },
+    "dataloader": {
+        "train": {
+            "batch_size": 256,
+            "shuffle": true,
+            "num_workers": 4
+        },
+        "valid": {
+            "batch_size": 256,
+            "shuffle": false,
+            "num_workers": 4
+        },
+        "test": {
+            "batch_size": 256,
+            "shuffle": false,
+            "num_workers": 4
+        }
+    },
+    "model": {
+        "module": "models.medfuse",
+        "type": "medfuse",
+        "kwargs": {
+            "d_model": 144,
+            "num_heads": 1,
+            "ff_dim": 144,
+            "ff_dropout": 0.1,
+            "attn_dropout": 0.025,
+            "norm_type": "LayerNorm",
+            "only_mask_first": false,
+            "seq_len": 48,
+            "NUM_LEN": 40,
+            "CAT_LEN": 2,
+            "num_layers": 1,
+            "decoder_down_factor": 2,
+            "decoder_dropout": 0.45,
+            "output_size": 1,
+            "num_embedding_module_kwargs": {
+                "independent_padding": true,
+                "max_norm": null,
+                "value_proj_dim": 16,
+                "k_gates": 144,
+                "freeze_epochs": 5,
+                "use_pretrained": true,
+                "pretrained_weight_path": "TODO"
+            },
+            "cat_embedding_module_kwargs": {
+                "independent_padding": true,
+                "max_norm": null,
+                "value_proj_dim": 32,
+                "k_gates": 144,
+                "use_pretrained": false,
+                "pretrained_weight_path": "TODO"
+            }
+        }
+    },
+    "loss": {
+        "module": "loss.focal_loss",
+        "type": "FocalLoss",
+        "kwargs": {
+            "alpha": 0.5,
+            "gamma": 2.0,
+            "reduction": "mean",
+            "eps": 0
+        }
+    },
+    "optimizer": {
+        "module": "torch.optim",
+        "type": "Adam",
+        "kwargs": {
+            "lr": 1e-4
+        }
+    },
+    "lr_scheduler": {
+        "module": "torch.optim.lr_scheduler",
+        "type": "StepLR",
+        "kwargs": {
+            "step_size": 80,
+            "gamma": 0.5
+        }
+    },
+    "trainer": {
+        "module": "trainer.base_trainer_PhysioNet2012",
+        "type": "BaseTrainer",
+        "kwargs": {
+            "do_early_stop": true,
+            "checkpoint_period": 10,
+            "plot_process": true,
+            "resume": false,
+            "resume_checkpoint_path": "TODO"
+        },
+        "train_kwargs": {
+            "epoch": 250
+        }
+    },
+    "tester": {
+        "module": "tester.base_tester_PhysioNet2012",
+        "type": "BaseTester",
+        "kwargs": {
+            "plot_probability_distribution": true
+        }
+    }
+}
