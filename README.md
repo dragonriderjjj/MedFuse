@@ -27,7 +27,7 @@ pip install -r requirements.txt
 ## 2) Data
 
 Datasets:
-- PhysioNet2012 (P12): provided or regenerated via script below.
+- PhysioNet2012 (P12): provided.
 - MIMIC-III (MI3): license required (https://physionet.org/content/mimiciii/).
 - HCC: protected by IRB.
 
@@ -114,7 +114,7 @@ Tip: Some configs accept -d GPU_ID (e.g., -d 0).
 - CUDA out of memory
   - Reduce batch size in config’s dataloader settings or select a smaller GPU via -d.
 - FileNotFoundError for data
-  - Align dataset.data_path with your actual folder (./data vs ./data/data).
+  - Align dataset.data_path with your actual folder.
 
 Data access notes:
 - MI3 requires a PhysioNet license.
